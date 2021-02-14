@@ -1,15 +1,25 @@
 // Script.js
 
-window.addEventListener('DOMContentLoaded', () => {
-  if (localStorage.getItem('productData') === null) {
-    fetch('https://fakestoreapi.com/products')
-      .then(response => response.json())
-      .then(data => localStorage.setItem('productData', JSON.stringify(data)));
-  }
+function getData(url, callback) {
+  fetch(url)
+    .then(response => response.json())
+    .then(data => callback(data));
+}
 
-  const productData = JSON.parse(localStorage.getItem('productData'));
+window.addEventListener('DOMContentLoaded', () => {
   const productList = document.getElementById('product-list');
-  productData.forEach(({image, title, price}) => {
-    productList.appendChild(new ProductItem(image, title, price));
-  });
+  const productData = localStorage.getItem('productData');
+
+  if (productData === null) {
+    getData('https://fakestoreapi.com/products', (data) => {
+      localStorage.setItem('productData', JSON.stringify(data));
+      data.forEach(({image, title, price}) => {
+        productList.appendChild(new ProductItem(image, title, price));
+      });
+    });
+  } else {
+    JSON.parse(productData).forEach(({image, title, price, id}) => {
+        productList.appendChild(new ProductItem(image, title, price, id));
+    });
+  }
 });

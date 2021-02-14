@@ -1,7 +1,7 @@
 // product-item.js
 
 class ProductItem extends HTMLElement {
-  constructor(image, title, price) {
+  constructor(image, title, price, id) {
     super();
 
     this.attachShadow({mode: 'open'});
@@ -23,8 +23,23 @@ class ProductItem extends HTMLElement {
     priceElem.innerText = price;
 
     const buttonElem = product.appendChild(document.createElement('button'));
-    buttonElem.onclick = () => alert('Added to Cart!');
     buttonElem.innerText = 'Add to Cart';
+    buttonElem.onclick = () => {
+      let count = document.getElementById('cart-count');
+      let cartData = localStorage.getItem('cartData');
+      let cart = (cartData === null) ? {} : JSON.parse(cartData);
+
+      if (id in cart) {
+        count.innerText = parseInt(count.innerText, 10) - 1;
+        buttonElem.innerText = 'Add to Cart';
+        delete cart[id];
+      } else {
+        count.innerText = parseInt(count.innerText, 10) + 1;
+        buttonElem.innerText = 'Remove from Cart';
+        cart[id] = true;
+      }
+      localStorage.setItem('cartData', JSON.stringify(cart));
+    }
     
     const style = document.createElement('style');
     style.textContent = `
@@ -34,6 +49,7 @@ class ProductItem extends HTMLElement {
       font-weight: bold;
       margin: 0;
     }
+
     .product {
       align-items: center;
       background-color: white;
@@ -51,6 +67,7 @@ class ProductItem extends HTMLElement {
       padding: 10px 20px;
       width: 200px;
     }
+
     .product > button {
       background-color: rgb(255, 208, 0);
       border: none;
@@ -61,16 +78,19 @@ class ProductItem extends HTMLElement {
       padding: 8px 20px;
       transition: 0.1s ease all;
     }
+
     .product > button:hover {
       background-color: rgb(255, 166, 0);
       cursor: pointer;
       transition: 0.1s ease all;
     }
+
     .product > img {
       align-self: center;
       justify-self: center;
       width: 100%;
     }
+
     .title {
       font-size: 1.1em;
       margin: 0;
@@ -78,6 +98,7 @@ class ProductItem extends HTMLElement {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
     .title:hover {
       font-size: 1.1em;
       margin: 0;
