@@ -13,8 +13,8 @@ window.addEventListener('DOMContentLoaded', () => {
   if (productData === null) {
     getData('https://fakestoreapi.com/products', (data) => {
       localStorage.setItem('productData', JSON.stringify(data));
-      data.forEach(({image, title, price}) => {
-        productList.appendChild(new ProductItem(image, title, price));
+      data.forEach(({image, title, price, id}) => {
+        productList.appendChild(new ProductItem(image, title, price, id));
       });
     });
   } else {
