@@ -1,18 +1,18 @@
 // product-item.js
 
 class ProductItem extends HTMLElement {
-  constructor() {
-    super(src, title, price);
+  constructor(image, title, price) {
+    super();
 
     this.attachShadow({mode: 'open'});
 
     const product = document.createElement('li');
     product.className = 'product';
 
-    const imgElem = product.appendChild(document.createElement('img'));
-    imgElem.src = src;
-    imgElem.alt = title;
-    imgElem.width = 200;
+    const imageElem = product.appendChild(document.createElement('img'));
+    imageElem.src = image;
+    imageElem.alt = title;
+    imageElem.width = 200;
 
     const titleElem = product.appendChild(document.createElement('p'));
     titleElem.className = 'title';
